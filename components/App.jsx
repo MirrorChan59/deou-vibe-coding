@@ -18,11 +18,16 @@ const STEPS = [
 
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [session, setSession] = React.useState(() => getValidSession());
   const [currentStep, setCurrentStep] = React.useState(1);
+  // 每个登录账号独立的本地数据空间；兼容迁移未分账号时期的旧数据
+  const dataKey = session ? `vibe-coding-idea-data:${session.user}` : 'vibe-coding-idea-data';
   const [data, setData] = React.useState(() => {
     try {
-      const saved = localStorage.getItem('vibe-coding-idea-data');
+      const saved = localStorage.getItem(dataKey);
       if (saved) return JSON.parse(saved);
+      const legacy = localStorage.getItem('vibe-coding-idea-data');
+      if (legacy && dataKey !== 'vibe-coding-idea-data') return JSON.parse(legacy);
     } catch (e) {}
     return {
       projectName: '',
@@ -42,12 +47,12 @@ function App() {
     };
   });
 
-  // 自动保存到 localStorage
+  // 自动保存到 localStorage（按登录账号隔离）
   React.useEffect(() => {
     try {
-      localStorage.setItem('vibe-coding-idea-data', JSON.stringify(data));
+      localStorage.setItem(dataKey, JSON.stringify(data));
     } catch (e) {}
-  }, [data]);
+  }, [data, dataKey]);
 
   // 应用主题色
   React.useEffect(() => {
@@ -109,7 +114,7 @@ function App() {
       case 3: return <StepResearch data={data} setData={setData} />;
       case 4: return <StepFeatures data={data} setData={setData} />;
       case 5: return <StepScoring data={data} />;
-      case 6: return <StepOutput data={data} />;
+      case 6: return <StepOutput data={data} session={session} />;
       default: return null;
     }
   };
@@ -131,6 +136,11 @@ function App() {
       setCurrentStep(1);
     }
   };
+
+  // 未登录或会话过期 → 登录页（所有 Hook 已在上方执行，此处再做条件渲染）
+  if (!session) {
+    return <LoginPage onLogin={setSession} />;
+  }
 
   return (
     <div className="app-container">
@@ -186,8 +196,38 @@ function App() {
             borderRadius: 6,
             border: '1px dashed var(--line)'
           }}>
-            💾 自动保存到本地
+            👤 {session.name} · 💾 自动保存到本地
           </div>
+          <button
+            onClick={() => {
+              if (confirm('确定退出登录吗？你的内容已自动保存在本机。')) {
+                clearSession();
+                setSession(null);
+              }
+            }}
+            style={{
+              marginTop: 12,
+              width: '100%',
+              padding: '8px',
+              background: 'transparent',
+              border: '1px solid var(--line)',
+              borderRadius: 6,
+              color: 'var(--ink-faint)',
+              fontSize: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={e => {
+              e.target.style.color = 'var(--coral)';
+              e.target.style.borderColor = 'var(--coral)';
+            }}
+            onMouseLeave={e => {
+              e.target.style.color = 'var(--ink-faint)';
+              e.target.style.borderColor = 'var(--line)';
+            }}
+          >
+            退出登录
+          </button>
           <button
             onClick={resetAll}
             style={{

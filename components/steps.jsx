@@ -658,8 +658,10 @@ function StepStyle({ data, setData }) {
 }
 
 // ========== 步骤6：创意输出 ==========
-function StepOutput({ data }) {
+function StepOutput({ data, session }) {
   const [showToast, setShowToast] = React.useState(false);
+  const [submitState, setSubmitState] = React.useState(''); // '' | 'loading' | 'done' | 'error'
+  const [submitMsg, setSubmitMsg] = React.useState('');
 
   const mvpFeatures = (data.features || []).filter(f => f.mvp && f.name);
   const extraFeatures = (data.features || []).filter(f => !f.mvp && f.name);
@@ -759,6 +761,44 @@ function StepOutput({ data }) {
     URL.revokeObjectURL(url);
   };
 
+  // 提交创意方案给老师（写入老师的多维表格，老师统一查看）
+  const submitToTeacher = async () => {
+    if (submitState === 'loading') return;
+    setSubmitState('loading');
+    setSubmitMsg('');
+    try {
+      const totalScore = Math.round((
+        calculateDemandScore(data) +
+        calculateMarketScore(data) +
+        calculateDiffScore(data) +
+        calculateFeasibilityScore(data) +
+        calculateProfitScore(data)
+      ) / 5);
+      const resp = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: session && session.token,
+          projectName: data.projectName || '未命名项目',
+          categories: (data.categories || []).join(' / '),
+          score: totalScore,
+          markdown: generateMarkdown(),
+        }),
+      });
+      const result = await resp.json().catch(() => ({}));
+      if (!resp.ok || !result.ok) {
+        setSubmitState('error');
+        setSubmitMsg(result.message || '提交失败，请稍后重试');
+        return;
+      }
+      setSubmitState('done');
+      setSubmitMsg('已提交给老师，可以在第 1 步继续修改后再次提交');
+    } catch (e) {
+      setSubmitState('error');
+      setSubmitMsg('网络异常，请检查网络后重试');
+    }
+  };
+
   return (
     <div>
       <div className="step-header">
@@ -772,14 +812,32 @@ function StepOutput({ data }) {
       </div>
 
       <div className="top-bar" style={{ marginTop: 0 }}>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-primary" onClick={copyToClipboard}>
             📋 复制 Markdown
           </button>
           <button className="btn btn-secondary" onClick={downloadMarkdown}>
             ⬇ 下载文件
           </button>
+          <button
+            className="btn btn-primary"
+            onClick={submitToTeacher}
+            disabled={submitState === 'loading'}
+            style={{ background: submitState === 'done' ? 'var(--mint)' : undefined }}
+          >
+            {submitState === 'loading' ? '提交中…' : submitState === 'done' ? '✓ 已提交' : '📤 提交给老师'}
+          </button>
         </div>
+        {submitMsg && (
+          <div style={{
+            marginTop: 12,
+            fontSize: 13,
+            lineHeight: 1.6,
+            color: submitState === 'error' ? 'var(--coral)' : 'var(--mint)'
+          }}>
+            {submitState === 'error' ? '⚠️ ' : '✓ '}{submitMsg}
+          </div>
+        )}
       </div>
 
       <div className="output-doc">

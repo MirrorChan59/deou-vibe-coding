@@ -1497,6 +1497,151 @@
       font-weight: 700;
       margin-bottom: 6px;
     }
+
+    /* ===== 登录页 ===== */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--paper);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg, #fff);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .login-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .login-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-brand-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--blue);
+    }
+
+    .login-brand-sub {
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
+
+    .login-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--ink-faint);
+      margin: 0 0 28px;
+      line-height: 1.6;
+    }
+
+    .login-field {
+      margin-bottom: 18px;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .login-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-faint);
+    }
+
+    .login-pwd-row {
+      position: relative;
+    }
+
+    .login-pwd-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      opacity: 0.6;
+    }
+
+    .login-pwd-toggle:hover {
+      opacity: 1;
+    }
+
+    .login-error {
+      font-size: 13px;
+      color: var(--coral, #E8726A);
+      background: rgba(232, 114, 106, 0.08);
+      border: 1px solid rgba(232, 114, 106, 0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+    }
+
+    .login-submit {
+      width: 100%;
+      padding: 13px;
+      font-size: 15px;
+      border-radius: 8px;
+      margin-top: 4px;
+    }
+
+    .login-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .login-tip {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
   </style>
 </head>
 <body>
@@ -1509,6 +1654,7 @@
   <script type="text/babel" src="components/tweaks-panel.jsx"></script>
   <script type="text/babel" src="components/steps.jsx"></script>
   <script type="text/babel" src="components/extra.jsx"></script>
+  <script type="text/babel" src="components/login.jsx"></script>
   <script type="text/babel" src="components/App.jsx"></script>
 </body>
 </html>
