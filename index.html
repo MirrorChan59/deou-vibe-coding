@@ -1,1158 +1,1514 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>得欧Vibe Coding 创意梳理工作台</title>
-<meta name="description" content="帮助学生把模糊想法梳理成可执行 Web 项目创意方案的交互式工作台">
-<style>
-:root {
-  --blue: #1E5FE0;
-  --blue-dark: #1648B0;
-  --navy: #0A2540;
-  --bg: #FFFFFF;
-  --bg-soft: #F4F7FC;
-  --text: #33415C;
-  --text-light: #64748B;
-  --border: #E2E8F2;
-  --radius: 14px;
-  --shadow: 0 4px 24px rgba(10, 37, 64, .08);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
-  background: var(--bg-soft);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.7;
-}
-button { font-family: inherit; cursor: pointer; border: none; background: none; }
-input, textarea, select { font-family: inherit; font-size: 16px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>得欧Vibe Coding 创意梳理工作台</title>
+  <style>
+    :root {
+      /* 主色板 —— 白 + 蓝 + 深蓝 专业商务风 */
+      --paper: #FFFFFF;
+      --paper-dark: #F5F7FA;
+      --paper-darker: #EEF2F7;
+      --ink: #1A2B4A;
+      --ink-soft: #4A5A7A;
+      --ink-faint: #8A9AB5;
+      --blue: #1E5FE0;
+      --blue-soft: #4A86F0;
+      --blue-faint: #E0ECFF;
+      --deep-blue: #0A2540;
+      --deep-blue-soft: #1E3A5F;
+      --mint: #2E9E8A;
+      --mint-soft: #5DBDA8;
+      --coral: #E8726A;
+      --coral-soft: #F4B5AF;
+      --line: #DCE3EE;
+      --line-soft: #E8EEF5;
+      --sticky-yellow: #FFF8E0;
+      --sticky-blue: #E6F0FF;
+      --sticky-green: #E0F4EE;
+      --sticky-purple: #EEE6FF;
+      --sticky-orange: #FFEFE0;
+    }
 
-/* ===== Header ===== */
-.site-header {
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-.site-header .logo {
-  height: 34px;
-  width: auto;
-  border-radius: 6px;
-}
-.site-header .brand {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-.site-header .brand .name {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--navy);
-  letter-spacing: .02em;
-}
-.site-header .brand .name em { font-style: normal; color: var(--blue); }
-.site-header .brand .sub {
-  font-size: 12px;
-  color: var(--text-light);
-  letter-spacing: .14em;
-}
+    [data-theme="dark"] {
+      --paper: #0A2540;
+      --paper-dark: #0F1F35;
+      --paper-darker: #0A1628;
+      --ink: #F0F4FA;
+      --ink-soft: #B8C5D9;
+      --ink-faint: #6A7A95;
+      --line: #2A3E5C;
+      --line-soft: #1F3352;
+      --blue: #4A86F0;
+      --blue-soft: #1E5FE0;
+      --blue-faint: #1A3050;
+      --deep-blue: #E6F0FF;
+      --sticky-yellow: #3D3520;
+      --sticky-blue: #1A2E50;
+      --sticky-green: #1A3D35;
+      --sticky-purple: #2A2540;
+      --sticky-orange: #3D2A1A;
+    }
 
-/* ===== Layout ===== */
-.layout {
-  display: flex;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 28px 20px 120px;
-  gap: 28px;
-  align-items: flex-start;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ===== Sidebar ===== */
-.sidebar {
-  width: 232px;
-  flex-shrink: 0;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 14px;
-  position: sticky;
-  top: 92px;
-}
-.step-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 11px 12px;
-  border-radius: 10px;
-  text-align: left;
-  color: var(--text-light);
-  font-size: 14px;
-  transition: background .15s, color .15s;
-  min-height: 44px;
-}
-.step-nav-item:hover { background: var(--bg-soft); }
-.step-nav-item.active { background: #EAF1FD; color: var(--blue); font-weight: 700; }
-.step-nav-item .num {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: var(--bg-soft);
-  color: var(--text-light);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12.5px; font-weight: 700;
-  flex-shrink: 0;
-}
-.step-nav-item.active .num { background: var(--blue); color: #fff; }
-.step-nav-item.done .num { background: #DDE9FB; color: var(--blue); }
-.progress-line {
-  margin: 14px 10px 4px;
-  height: 6px;
-  background: var(--bg-soft);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.progress-line .bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--blue), var(--blue-dark));
-  border-radius: 3px;
-  transition: width .3s;
-}
-.progress-text { font-size: 12px; color: var(--text-light); padding: 6px 10px 0; }
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-/* ===== Mobile step bar ===== */
-.mobile-stepbar { display: none; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--line-soft) 1px, transparent 0);
+      background-size: 32px 32px;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* ===== Main ===== */
-.main { flex: 1; min-width: 0; }
-.step-panel {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 30px 32px 36px;
-  box-shadow: var(--shadow);
-}
-.step-kicker {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--blue);
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.step-title {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--navy);
-  margin-bottom: 6px;
-}
-.step-desc { color: var(--text-light); margin-bottom: 26px; font-size: 14.5px; }
+    #root { position: relative; z-index: 1; }
 
-.field { margin-bottom: 22px; }
-.field > label {
-  display: block;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 8px;
-  font-size: 14.5px;
-}
-.field > label .hint { font-weight: 400; color: var(--text-light); font-size: 13px; margin-left: 8px; }
-.field input[type="text"], .field textarea {
-  width: 100%;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: var(--text);
-  background: #FBFCFE;
-  transition: border-color .15s, box-shadow .15s;
-}
-.field input[type="text"]:focus, .field textarea:focus {
-  outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(30, 95, 224, .12);
-  background: #fff;
-}
-.field textarea { min-height: 96px; resize: vertical; }
-.field-tip { font-size: 12.5px; color: var(--text-light); margin-top: 6px; }
-.field-tip.good { color: var(--blue); }
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
 
-/* chips */
-.chips { display: flex; flex-wrap: wrap; gap: 10px; }
-.chip {
-  padding: 9px 18px;
-  border-radius: 999px;
-  border: 1.5px solid var(--border);
-  background: #fff;
-  color: var(--text);
-  font-size: 14px;
-  transition: all .15s;
-  min-height: 40px;
-}
-.chip:hover { border-color: var(--blue); color: var(--blue); }
-.chip.on { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+    /* 侧边导航 */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--paper-dark);
+      border-right: 1px dashed var(--line);
+      padding: 32px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
 
-/* method cards */
-.method-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.method-card {
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  background: #fff;
-  text-align: left;
-  transition: all .15s;
-  position: relative;
-  min-height: 44px;
-}
-.method-card:hover { border-color: var(--blue); transform: translateY(-1px); }
-.method-card.on { border-color: var(--blue); background: #F0F6FF; }
-.method-card .m-name { font-weight: 700; color: var(--navy); font-size: 15px; margin-bottom: 4px; }
-.method-card .m-desc { font-size: 12.5px; color: var(--text-light); line-height: 1.55; }
-.method-card .m-check {
-  position: absolute;
-  top: 12px; right: 12px;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; color: transparent;
-}
-.method-card.on .m-check { background: var(--blue); border-color: var(--blue); color: #fff; }
-.method-detail {
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-soft);
-  padding: 18px 20px;
-  margin-bottom: 20px;
-  font-size: 13.5px;
-}
-.method-detail h4 { color: var(--navy); font-size: 14.5px; margin-bottom: 10px; }
-.method-detail .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.method-detail ul { padding-left: 18px; }
-.method-detail li { margin-bottom: 4px; }
-.method-detail .pros { color: #15803D; }
-.method-detail .cons { color: #B45309; }
+    .sidebar-header {
+      margin-bottom: 32px;
+    }
 
-/* features */
-.feature-item {
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  background: #fff;
-}
-.feature-item.mvp { border-color: var(--blue); background: #F6FAFF; }
-.feature-row { display: flex; gap: 10px; align-items: flex-start; }
-.feature-row .f-inputs { flex: 1; display: grid; gap: 8px; }
-.feature-row input[type="text"] {
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px;
-  width: 100%;
-  background: #FBFCFE;
-}
-.feature-row input[type="text"]:focus { outline: none; border-color: var(--blue); background:#fff; }
-.f-mvp-btn {
-  flex-shrink: 0;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1.5px solid var(--border);
-  font-size: 13px;
-  color: var(--text-light);
-  min-height: 40px;
-  white-space: nowrap;
-}
-.feature-item.mvp .f-mvp-btn { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
-.f-del { flex-shrink: 0; color: #C0CBDD; font-size: 18px; padding: 8px; min-width: 40px; min-height: 40px; }
-.f-del:hover { color: #DC2626; }
-.add-feature-btn {
-  width: 100%;
-  padding: 12px;
-  border: 1.5px dashed var(--border);
-  border-radius: 12px;
-  color: var(--text-light);
-  font-size: 14px;
-  min-height: 48px;
-}
-.add-feature-btn:hover { border-color: var(--blue); color: var(--blue); }
-.quick-chips { margin-top: 14px; }
-.quick-chips .qc-label { font-size: 12.5px; color: var(--text-light); margin-bottom: 8px; }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
 
-/* scoring */
-.score-hero {
-  background: linear-gradient(135deg, var(--navy), #143A66);
-  border-radius: var(--radius);
-  color: #fff;
-  padding: 26px 28px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-.score-hero .big { font-size: 52px; font-weight: 900; line-height: 1; }
-.score-hero .big small { font-size: 18px; font-weight: 400; opacity: .6; }
-.score-hero .grade { font-size: 15px; opacity: .9; }
-.score-hero .grade strong { font-size: 20px; display: block; margin-top: 2px; }
-.score-hero .suggest { flex: 1; font-size: 13.5px; opacity: .85; text-align: right; }
-.dim-item {
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
-  background: #fff;
-}
-.dim-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-.dim-head .d-name { font-weight: 700; color: var(--navy); }
-.dim-head .d-score { font-weight: 800; color: var(--blue); font-size: 17px; }
-.dim-bar { height: 8px; border-radius: 4px; background: var(--bg-soft); overflow: hidden; margin-bottom: 8px; }
-.dim-bar .fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--blue-dark)); transition: width .4s; }
-.dim-sugg { font-size: 13px; color: var(--text-light); }
-.dim-sugg.warn { color: #B45309; }
+    .sidebar-logo-img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
 
-/* output */
-.output-preview {
-  background: var(--navy);
-  color: #D7E3F5;
-  border-radius: var(--radius);
-  padding: 24px;
-  font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.75;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 480px;
-  overflow-y: auto;
-  margin-bottom: 18px;
-}
-.output-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn {
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  min-height: 48px;
-  transition: all .15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-}
-.btn-primary { background: var(--blue); color: #fff; }
-.btn-primary:hover { background: var(--blue-dark); }
-.btn-ghost { border: 1.5px solid var(--border); color: var(--text); background: #fff; }
-.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+    .sidebar-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-/* bottom nav */
-.bottom-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 22px;
-  gap: 12px;
-}
+    .sidebar-logo-brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.5px;
+    }
 
-/* ===== Case library ===== */
-.case-fab {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  background: var(--navy);
-  color: #fff;
-  padding: 13px 22px;
-  border-radius: 999px;
-  font-size: 14.5px;
-  font-weight: 700;
-  box-shadow: 0 6px 24px rgba(10, 37, 64, .3);
-  z-index: 80;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 48px;
-}
-.case-fab:hover { background: #143A66; }
-.case-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 37, 64, .45);
-  z-index: 90;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s;
-}
-.case-overlay.open { opacity: 1; pointer-events: auto; }
-.case-drawer {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: min(460px, 100%);
-  background: #FFFFFF;
-  z-index: 100;
-  transform: translateX(100%);
-  transition: transform .28s cubic-bezier(.32,.72,.35,1);
-  display: flex;
-  flex-direction: column;
-  box-shadow: -8px 0 40px rgba(10, 37, 64, .18);
-}
-.case-drawer.open { transform: translateX(0); }
-.case-drawer-head {
-  padding: 20px 22px 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  background: #fff;
-}
-.case-drawer-head h3 { font-size: 19px; font-weight: 800; color: var(--navy); }
-.case-drawer-head p { font-size: 13px; color: var(--text-light); margin-top: 2px; }
-.case-close {
-  font-size: 22px;
-  color: var(--text-light);
-  width: 44px; height: 44px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-.case-close:hover { background: var(--bg-soft); color: var(--navy); }
-.case-filter-row {
-  display: flex;
-  gap: 8px;
-  padding: 14px 22px;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--border);
-  background: #fff;
-  -webkit-overflow-scrolling: touch;
-}
-.case-filter-row::-webkit-scrollbar { display: none; }
-.case-filter-row .chip { flex-shrink: 0; padding: 7px 15px; font-size: 13px; min-height: 36px; }
-.case-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 18px 22px 40px;
-  background: #FFFFFF;
-  -webkit-overflow-scrolling: touch;
-}
-.case-card {
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 18px;
-  background: #fff;
-  cursor: pointer;
-  transition: all .18s;
-}
-.case-card:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateY(-2px); }
-.case-card .cc-img { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--bg-soft); }
-.case-card .cc-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
-.case-card:hover .cc-img img { transform: scale(1.04); }
-.case-card .cc-cat {
-  position: absolute;
-  top: 12px; left: 12px;
-  background: rgba(255,255,255,.94);
-  color: var(--blue);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 999px;
-}
-.case-card .cc-body { padding: 15px 17px 17px; }
-.case-card .cc-name { font-weight: 800; color: var(--navy); font-size: 16.5px; margin-bottom: 5px; }
-.case-card .cc-desc { font-size: 13.5px; color: var(--text-light); line-height: 1.6; margin-bottom: 10px; }
-.case-card .cc-meta { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-light); }
-.case-card .cc-meta b { color: var(--blue); font-weight: 700; }
+    .sidebar-logo-en {
+      font-family: 'Caveat', cursive;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+    }
 
-/* case detail */
-.case-detail { flex: 1; overflow-y: auto; background: #FFFFFF; -webkit-overflow-scrolling: touch; }
-.case-detail .cd-hero { aspect-ratio: 16/9; overflow: hidden; background: var(--bg-soft); }
-.case-detail .cd-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.case-detail .cd-body { padding: 20px 24px 40px; }
-.case-detail .cd-cat {
-  display: inline-block;
-  background: #EAF1FD;
-  color: var(--blue);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 999px;
-  margin-bottom: 10px;
-}
-.case-detail h2 { font-size: 21px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
-.case-detail .cd-sub { color: var(--text-light); font-size: 14px; margin-bottom: 18px; }
-.case-detail .cd-meta { display: flex; gap: 20px; margin-bottom: 20px; font-size: 13px; color: var(--text-light); }
-.case-detail .cd-meta b { color: var(--blue); }
-.cd-block { margin-bottom: 18px; }
-.cd-block .cd-label {
-  font-size: 12.5px;
-  font-weight: 800;
-  color: var(--blue);
-  letter-spacing: .08em;
-  margin-bottom: 6px;
-}
-.cd-block p { font-size: 14.5px; line-height: 1.75; color: var(--text); }
-.cd-block.takeaway {
-  background: #F0F6FF;
-  border-left: 4px solid var(--blue);
-  border-radius: 0 12px 12px 0;
-  padding: 14px 16px;
-}
-.case-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--blue);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 10px 0;
-  min-height: 44px;
-}
-.cd-apply {
-  width: 100%;
-  margin-top: 10px;
-}
+    .sidebar-title {
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 500;
+      margin-top: 2px;
+      letter-spacing: 1px;
+    }
 
-/* toast */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 90px;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--navy);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-size: 14px;
-  z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: all .3s;
-  max-width: 86vw;
-  text-align: center;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-/* ===== Mobile ===== */
-@media (max-width: 860px) {
-  .site-header { padding: 0 16px; height: 58px; }
-  .site-header .logo { height: 28px; }
-  .site-header .brand .name { font-size: 15px; }
-  .site-header .brand .sub { font-size: 11px; }
-  .layout { padding: 0 0 100px; display: block; }
-  .sidebar { display: none; }
-  .mobile-stepbar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #fff;
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-    position: sticky;
-    top: 58px;
-    z-index: 40;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .mobile-stepbar::-webkit-scrollbar { display: none; }
-  .ms-dot {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--bg-soft);
-    color: var(--text-light);
-    font-size: 12.5px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .ms-dot.active { background: var(--blue); color: #fff; }
-  .ms-dot.done { background: #DDE9FB; color: var(--blue); }
-  .ms-line { flex: 1; min-width: 8px; height: 2px; background: var(--border); flex-shrink: 0; }
-  .ms-label { font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; margin-left: 6px; }
-  .step-panel { border-radius: 0; border-left: none; border-right: none; padding: 22px 18px 30px; box-shadow: none; }
-  .step-title { font-size: 21px; }
-  .method-detail .cols { grid-template-columns: 1fr; }
-  .score-hero { flex-direction: column; align-items: flex-start; gap: 10px; padding: 22px; }
-  .score-hero .suggest { text-align: left; }
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: #fff;
-    border-top: 1px solid var(--border);
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-    z-index: 60;
-    margin-top: 0;
-  }
-  .bottom-nav .btn { flex: 1; }
-  .case-fab { right: 14px; bottom: calc(78px + env(safe-area-inset-bottom)); padding: 11px 18px; }
-  .case-drawer { width: 100%; }
-  .output-actions .btn { flex: 1; }
-}
-</style>
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .step-item:hover {
+      background: var(--paper);
+    }
+
+    .step-item.active {
+      background: var(--blue-faint);
+    }
+
+    .step-item.completed .step-num {
+      background: var(--mint);
+      color: white;
+    }
+
+    .step-item.active .step-num {
+      background: var(--blue);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      color: var(--ink-soft);
+    }
+
+    .step-text {
+      flex: 1;
+      padding-top: 2px;
+    }
+
+    .step-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+
+    .sidebar-footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .progress-label {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--paper);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--blue));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      padding: 48px 64px;
+      max-width: 900px;
+    }
+
+    .step-header {
+      margin-bottom: 40px;
+    }
+
+    .step-eyebrow {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .step-title {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--deep-blue);
+      margin-top: 8px;
+      line-height: 1.35;
+      letter-spacing: -0.5px;
+    }
+
+    .step-subtitle {
+      font-size: 15px;
+      color: var(--ink-soft);
+      margin-top: 12px;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* 信息卡片（原便利贴风格升级为商务卡） */
+    .sticky-card {
+      background: var(--paper);
+      padding: 24px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      box-shadow: 0 2px 8px rgba(30, 95, 224, 0.06);
+      position: relative;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .sticky-card:hover {
+      box-shadow: 0 4px 16px rgba(30, 95, 224, 0.1);
+      border-left-color: var(--deep-blue);
+    }
+
+    .sticky-card.pink { border-left-color: #C06B8A; background: #FFFAFB; }
+    .sticky-card.blue { border-left-color: var(--blue); background: #F5F9FF; }
+    .sticky-card.green { border-left-color: var(--mint); background: #F4FBF9; }
+    .sticky-card.orange { border-left-color: #E88A3A; background: #FFFAF5; }
+
+    .sticky-card::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--blue-faint);
+      opacity: 0.5;
+    }
+
+    .sticky-card.pink::before { background: #FCE4EC; }
+    .sticky-card.blue::before { background: var(--blue-faint); }
+    .sticky-card.green::before { background: #D4F0E8; }
+    .sticky-card.orange::before { background: #FFE0C2; }
+
+    .sticky-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .sticky-content {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    /* 表单元素 */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-label .hint {
+      font-weight: 400;
+      color: var(--ink-faint);
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(238, 136, 51, 0.15);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.7;
+    }
+
+    .form-textarea.large {
+      min-height: 160px;
+    }
+
+    /* 标签选择器 */
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-item {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      color: var(--ink-soft);
+      user-select: none;
+    }
+
+    .tag-item:hover {
+      border-color: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .tag-item.selected {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    /* 功能卡片列表 */
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 16px;
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .feature-item:hover {
+      border-color: var(--blue-soft);
+    }
+
+    .feature-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--blue-faint);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .feature-content {
+      flex: 1;
+    }
+
+    .feature-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      outline: none;
+      padding: 0;
+      margin-bottom: 4px;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .feature-desc {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--ink-soft);
+      outline: none;
+      padding: 0;
+      resize: none;
+      font-family: 'Noto Sans SC', sans-serif;
+      line-height: 1.5;
+    }
+
+    .feature-delete {
+      background: none;
+      border: none;
+      color: var(--ink-faint);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .feature-delete:hover {
+      color: var(--coral);
+      background: var(--coral-soft);
+    }
+
+    .add-feature-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border: 1.5px dashed var(--line);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ink-faint);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    .add-feature-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--blue-faint);
+    }
+
+    /* 按钮 */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      font-family: 'Noto Sans SC', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 95, 224, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--deep-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(30, 95, 224, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--paper);
+      color: var(--ink-soft);
+      border: 1.5px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink-faint);
+      color: var(--ink);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* 灵感提示气泡 */
+    .tip-bubble {
+      background: linear-gradient(135deg, var(--blue-faint) 0%, #F0F6FF 100%);
+      padding: 18px 22px;
+      border-radius: 12px;
+      position: relative;
+      margin-bottom: 24px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+      border: 1px solid var(--blue-faint);
+    }
+
+    .tip-label {
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 6px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tip-label::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+
+    /* 输出文档样式 */
+    .output-doc {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      padding: 48px;
+      border: 1px solid var(--line);
+    }
+
+    [data-theme="dark"] .output-doc {
+      background: var(--paper-dark);
+    }
+
+    .output-title {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .output-meta {
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .output-section {
+      margin-bottom: 28px;
+    }
+
+    .output-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .output-section-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    .output-text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--ink-soft);
+    }
+
+    .output-features {
+      list-style: none;
+      padding: 0;
+    }
+
+    .output-features li {
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+      display: flex;
+      gap: 12px;
+    }
+
+    .output-features li:last-child {
+      border-bottom: none;
+    }
+
+    .output-feature-name {
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 100px;
+    }
+
+    .output-feature-desc {
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+
+    .output-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .output-tag {
+      padding: 4px 12px;
+      background: var(--blue-faint);
+      color: var(--blue);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* 空状态 */
+    .empty-hint {
+      text-align: center;
+      padding: 20px;
+      color: var(--ink-faint);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* 高亮下划线 */
+    .handwritten {
+      font-family: 'Caveat', cursive;
+    }
+
+    .scribble-underline {
+      position: relative;
+      display: inline-block;
+      color: var(--blue);
+    }
+
+    .scribble-underline::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--blue-faint);
+      border-radius: 2px;
+      z-index: -1;
+    }
+
+    /* 响应式 */
+    @media (max-width: 900px) {
+      .app-container { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 16px 20px;
+        border-right: none;
+        border-bottom: 1px dashed var(--line);
+      }
+      .sidebar-header { margin-bottom: 16px; }
+      .step-list { flex-direction: row; overflow-x: auto; gap: 8px; }
+      .step-item { min-width: 140px; flex-shrink: 0; }
+      .step-desc { display: none; }
+      .sidebar-footer { display: none; }
+      .main-content { padding: 24px 20px; }
+      .step-title { font-size: 26px; }
+      .output-doc { padding: 24px; }
+    }
+
+    /* 顶部操作栏 */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      color: var(--ink-soft);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* 复选框组 */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      color: var(--ink-soft);
+      user-select: none;
+    }
+
+    .checkbox-item:hover {
+      border-color: var(--blue-soft);
+    }
+
+    .checkbox-item.checked {
+      border-color: var(--blue);
+      background: var(--blue-faint);
+      color: var(--ink);
+    }
+
+    .checkbox-box {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-item.checked .checkbox-box {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .checkbox-item.checked .checkbox-box::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+
+    /* 技术栈卡片 */
+    .tech-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .tech-card {
+      padding: 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--paper);
+    }
+
+    .tech-card:hover {
+      border-color: var(--blue-soft);
+      transform: translateY(-2px);
+    }
+
+    .tech-card.selected {
+      border-color: var(--blue);
+      background: var(--blue-faint);
+    }
+
+    .tech-card-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .tech-card-desc {
+      font-size: 12px;
+      color: var(--ink-faint);
+      line-height: 1.5;
+    }
+
+    /* 风格预览卡片 */
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .style-card {
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: var(--paper);
+    }
+
+    .style-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .style-card.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(238, 136, 51, 0.15);
+    }
+
+    .style-preview {
+      height: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .style-info {
+      padding: 12px 16px;
+    }
+
+    .style-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .style-desc {
+      font-size: 12px;
+      color: var(--ink-faint);
+      line-height: 1.4;
+    }
+
+    /* 复制成功提示 */
+    .copy-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--ink);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 案例库抽屉 */
+    .case-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 990;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .case-drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .case-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(480px, 92vw);
+      height: 100vh;
+      background: #ffffff;
+      z-index: 1000;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .case-drawer.open {
+      transform: translateX(0);
+    }
+
+    .case-drawer-header {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid var(--stroke);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .case-drawer-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--deep-blue);
+    }
+
+    .case-drawer-subtitle {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .case-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--surface-2);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .case-close-btn:hover {
+      background: var(--surface-3);
+    }
+
+    .case-filter-row {
+      padding: 14px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--stroke);
+      flex-shrink: 0;
+      scrollbar-width: none;
+    }
+
+    .case-filter-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .case-filter-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: #ffffff;
+      color: var(--ink-soft);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .case-filter-chip:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .case-filter-chip.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    .case-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 24px 24px;
+    }
+
+    .case-list-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .case-card {
+      background: #ffffff;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .case-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--blue-faint);
+    }
+
+    .case-card-image-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--surface-2);
+    }
+
+    .case-card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .case-card:hover .case-card-image {
+      transform: scale(1.05);
+    }
+
+    .case-card-tag-on-image {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: none;
+      font-size: 11px;
+      padding: 3px 10px;
+      z-index: 1;
+    }
+
+    .case-card-body {
+      padding: 14px 16px 16px;
+    }
+
+    .case-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .case-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--deep-blue);
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .case-card-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--blue-faint);
+      color: var(--blue);
+      font-weight: 500;
+      white-space: nowrap;
+      border: 1px solid var(--blue-soft);
+    }
+
+    .case-card-desc {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .case-card-meta {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--ink-mute);
+    }
+
+    .case-detail-back {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      background: none;
+      border: none;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .case-detail-back:hover {
+      text-decoration: underline;
+    }
+
+    .case-detail-image-wrapper {
+      width: calc(100% + 48px);
+      margin: -12px -24px 0;
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    .case-detail-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-detail-content {
+      max-height: none;
+    }
+
+    .case-detail-section {
+      margin-bottom: 16px;
+    }
+
+    .case-detail-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .case-detail-text {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    .case-floating-btn {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 50;
+    }
+
+    /* 评分面板 */
+    .score-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+
+    .score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .score-dimension {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--deep-blue);
+    }
+
+    .score-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .score-bar {
+      height: 8px;
+      background: var(--line-soft);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--deep-blue));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .score-fill.high { background: linear-gradient(90deg, var(--mint), #1A8070); }
+    .score-fill.medium { background: linear-gradient(90deg, #F0C840, #E0A020); }
+    .score-fill.low { background: linear-gradient(90deg, var(--coral), #C04040); }
+
+    .score-feedback {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      padding: 10px 14px;
+      background: var(--paper-dark);
+      border-radius: 8px;
+      border-left: 3px solid var(--blue);
+    }
+
+    .total-score-box {
+      background: linear-gradient(135deg, var(--deep-blue) 0%, var(--blue) 100%);
+      border-radius: 16px;
+      padding: 32px;
+      color: white;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .total-score-label {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .total-score-number {
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .total-score-number span {
+      font-size: 24px;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    .total-score-grade {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .score-legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .score-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .score-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* 调研方法卡片 */
+    .research-method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .research-method-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      background: var(--paper);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-method-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .research-method-card:hover::before,
+    .research-method-card.selected::before {
+      transform: scaleX(1);
+    }
+
+    .research-method-card:hover,
+    .research-method-card.selected {
+      border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(30, 95, 224, 0.1);
+    }
+
+    .research-method-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--blue-faint);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .research-method-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--deep-blue);
+      margin-bottom: 4px;
+    }
+
+    .research-method-desc {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .research-method-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--ink-faint);
+    }
+
+    .research-detail-panel {
+      background: var(--paper-dark);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-top: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .research-detail-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--deep-blue);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .research-steps {
+      list-style: none;
+      padding: 0;
+    }
+
+    .research-steps li {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .research-steps li:last-child {
+      border-bottom: none;
+    }
+
+    .research-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .research-step-text {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .research-pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .research-pros, .research-cons {
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .research-pros {
+      background: #E8F8F3;
+      color: #1A6B5A;
+    }
+
+    .research-cons {
+      background: #FFF0EC;
+      color: #B04A3E;
+    }
+
+    .research-pros-title, .research-cons-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+  </style>
 </head>
 <body>
+  <div id="root"></div>
 
-<header class="site-header">
-  <img class="logo" src="assets/logo.jpg" alt="得欧 IDO">
-  <div class="brand">
-    <span class="name">得欧<em>Vibe Coding</em></span>
-    <span class="sub">创意梳理工作台</span>
-  </div>
-</header>
+  <script src="vendor/react.production.min.js"></script>
+  <script src="vendor/react-dom.production.min.js"></script>
+  <script src="vendor/babel.min.js"></script>
 
-<div class="mobile-stepbar" id="mobileStepbar"></div>
-
-<div class="layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="main">
-    <section class="step-panel" id="stepPanel"></section>
-    <div class="bottom-nav">
-      <button class="btn btn-ghost" id="prevBtn">← 上一步</button>
-      <button class="btn btn-primary" id="nextBtn">下一步 →</button>
-    </div>
-  </main>
-</div>
-
-<button class="case-fab" id="caseFab">📚 案例库</button>
-
-<div class="case-overlay" id="caseOverlay"></div>
-<div class="case-drawer" id="caseDrawer" role="dialog" aria-label="优秀 Vibe Coding 案例库"></div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* ================= 数据 ================= */
-const TYPE_TAGS = ['AI 应用', '效率工具', '生活方式', '教育学习', '社区社交', '数据可视化'];
-const QUICK_FEATURES = ['用户注册登录', '数据统计看板', '搜索与筛选', '一键分享', '消息通知', '个人中心'];
-
-const METHODS = [
-  { id: 'interview', name: '用户访谈', desc: '找 3-5 个目标用户深聊，验证痛点是否真实存在',
-    steps: ['列出 5-8 个开放式问题', '找 3-5 个目标用户各聊 20 分钟', '记录原话，不急着给方案', '归纳出 3 个最高频痛点'],
-    pros: '信息深、能挖到真实动机', cons: '样本小，容易以偏概全' },
-  { id: 'survey', name: '问卷调查', desc: '用问卷星等工具发到目标群体，收集量化数据',
-    steps: ['把假设拆成 10-15 道题', '先小范围试填改题', '投放到目标社群', '用交叉分析找显著结论'],
-    pros: '样本量大、可量化', cons: '设计不好容易得到无效数据' },
-  { id: 'competitor', name: '竞品分析', desc: '体验同类产品，拆解它们的优劣与定价',
-    steps: ['找 3 个直接竞品', '各体验 30 分钟并截图', '列出功能/定价/用户评价对比表', '找出它们都没做好的点'],
-    pros: '成本低、直接指导差异化', cons: '只能看到表层功能' },
-  { id: 'landing', name: '落地页验证', desc: '先做一个单页介绍产品，测试用户是否愿意留邮箱',
-    steps: ['用一页讲清价值主张', '放邮箱收集或预约按钮', '投小额流量或发到社群', '转化率 >5% 说明需求成立'],
-    pros: '用真实行为验证需求', cons: '需要一点流量来源' },
-  { id: 'community', name: '社群舆情分析', desc: '在微博/小红书/知乎搜关键词，看真实讨论',
-    steps: ['列出 5-10 个相关关键词', '逐平台搜索并收藏高热内容', '统计吐槽点出现频率', '摘录代表性原声'],
-    pros: '免费、能看到真实情绪', cons: '噪音多，需要甄别' },
-  { id: 'mvptest', name: 'MVP 原型测试', desc: '做出最简版本让真实用户试用并观察',
-    steps: ['只做 1 个核心功能', '找 5 个目标用户现场试用', '观察卡壳点，少说话多记录', '按反馈决定迭代方向'],
-    pros: '最接近真实使用', cons: '需要先做出原型' },
-];
-
-const CASES = [
-  { id: 'notion-ai', name: 'Notion AI', title: '智能写作助手', cat: 'AI 应用', img: 'assets/case-notion-ai.jpeg',
-    desc: '嵌入 Notion 的 AI 写作工具，一键生成、润色、翻译文档，让知识工作者效率翻倍。',
-    insight: '「AI + 已有成熟产品」是低风险切入点，用户不需要为 AI 单独建立使用习惯。',
-    highlight: '从现有产品的 AI 增强切入，降低用户迁移成本。',
-    business: '按席位订阅，在原有 Notion 套餐基础上加 $8/月/人。',
-    takeaway: '不一定非要做全新产品，把 AI 能力整合进已有场景，用户更容易买单。',
-    mvp: '2 个月', users: '千万级用户' },
-  { id: 'linear', name: 'Linear', title: '优雅的项目管理工具', cat: '效率工具', img: 'assets/case-linear.jpeg',
-    desc: '为科技团队设计的下一代 issue 追踪工具，以极致流畅的交互体验著称。',
-    insight: '在成熟赛道里，「体验好 10 倍」本身就是差异化，不一定需要新功能。',
-    highlight: '键盘优先操作、极速响应，把工具做到「让人喜欢用」。',
-    business: '按席位订阅，免费额度 + 团队付费套餐。',
-    takeaway: '选一个你每天都在用、但总觉得别扭的工具，做一个「更好用的版本」。',
-    mvp: '3 个月', users: '数百万团队' },
-  { id: 'bereal', name: 'BeReal', title: '真实社交应用', cat: '社区社交', img: 'assets/case-bereal.jpeg',
-    desc: '每天随机时间通知用户拍照，前后摄像头同时拍摄，展示真实的自己。',
-    insight: '反向思考：当所有产品都在做「美化」，「真实」就成了稀缺价值。',
-    highlight: '用「随机时间 + 双摄像头」的机制设计强制真实，而非靠口号。',
-    business: '先增长后变现，靠用户规模获得融资。',
-    takeaway: '找一个主流产品的「反面」，可能就是你的机会。',
-    mvp: '1 个月', users: '过亿用户' },
-  { id: 'duolingo', name: 'Duolingo', title: '游戏化语言学习', cat: '教育学习', img: 'assets/case-duolingo.jpeg',
-    desc: '把学语言变成闯关游戏，连胜打卡和排行榜让学习停不下来。',
-    insight: '学习类产品的核心不是内容，是「让用户明天还回来」。',
-    highlight: '连胜机制、每日目标、好友排行，把留存做成游戏。',
-    business: '免费 + 订阅去广告，付费解锁高级功能。',
-    takeaway: '给你的产品加一个「连胜打卡」机制，留存会完全不同。',
-    mvp: '2 个月', users: '过亿用户' },
-  { id: 'headspace', name: 'Headspace', title: '冥想与正念 App', cat: '生活方式', img: 'assets/case-headspace.jpeg',
-    desc: '把冥想变成每天 10 分钟的轻松练习，用温暖的视觉降低心理门槛。',
-    insight: '把「玄」的东西做得「具体可感」，是新品类打开市场的关键。',
-    highlight: '用动画和引导语音把抽象概念变成每天可执行的小练习。',
-    business: '订阅制，免费体验课程 + 年度会员。',
-    takeaway: '想想你身边有什么「大家知道好但坚持不下来」的事，帮用户降低门槛。',
-    mvp: '2 个月', users: '千万级用户' },
-  { id: 'midjourney', name: 'Midjourney', title: 'AI 绘画生成工具', cat: 'AI 应用', img: 'assets/case-midjourney.jpeg',
-    desc: '在 Discord 里用一句话生成惊艳图像，社区共创让作品互相启发。',
-    insight: '把生成过程放在公开社区里，用户既是创作者也是传播者。',
-    highlight: '寄生在 Discord 上起家，零客户端成本获得海量用户。',
-    business: '订阅制，按月付费获得生成额度。',
-    takeaway: '你的产品不一定要从 App 开始，寄生在现有平台上也能长出来。',
-    mvp: '1 个月', users: '千万级用户' },
-  { id: 'obsidian', name: 'Obsidian', title: '双向链接笔记', cat: '效率工具', img: 'assets/case-obsidian.jpeg',
-    desc: '本地优先的 Markdown 笔记，双向链接让知识连成网络。',
-    insight: '数据存在用户自己手里，反而赢得了最挑剔的一批用户。',
-    highlight: '插件生态开放，社区共建了数千个插件。',
-    business: '个人免费，商用授权 + 同步服务订阅。',
-    takeaway: '「本地优先」「数据自有」是打动专业用户的强价值主张。',
-    mvp: '3 个月', users: '数百万用户' },
-  { id: 'strava', name: 'Strava', title: '运动记录与社交', cat: '生活方式', img: 'assets/case-strava.jpeg',
-    desc: '记录跑步骑行轨迹，路段排行榜让运动变成社交竞技。',
-    insight: '工具 + 社区：先帮你记数据，再让你为数据「较劲」。',
-    highlight: '「路段（Segment）」设计把同一条路变成所有用户的竞技场。',
-    business: '免费 + 订阅，高级数据分析付费。',
-    takeaway: '找一个有「数据可记录」的爱好场景，加上排行榜就有粘性。',
-    mvp: '2 个月', users: '过亿用户' },
-];
-
-const STEPS = [
-  { id: 'idea', name: '灵感起源', kicker: 'Step 01', desc: '先别想太大：第一个项目最好是一个单一功能的小工具。' },
-  { id: 'user', name: '用户画像', kicker: 'Step 02', desc: '这个产品首先给谁用？越具体越好，不要写「所有人」。' },
-  { id: 'research', name: '商业调研', kicker: 'Step 03', desc: '用轻量调研验证方向：至少做竞品分析和一次用户访谈。' },
-  { id: 'feature', name: '核心功能', kicker: 'Step 04', desc: '做减法：第一版 MVP 功能不超过 3 个。' },
-  { id: 'score', name: '方案评分', kicker: 'Step 05', desc: '五个维度自检，看看方案有没有明显盲区。' },
-  { id: 'output', name: '创意输出', kicker: 'Step 06', desc: '生成完整创意文档，直接作为 AI 编程工具的初始 prompt。' },
-];
-
-/* ================= 状态 ================= */
-const defaultState = () => ({
-  step: 0,
-  projectName: '', problem: '', inspiration: '', typeTags: [],
-  targetUsers: '', persona: '', scenario: '', painPoints: '',
-  researchMethods: [], competitors: '', marketSize: '', researchNotes: '',
-  features: [{ name: '', desc: '', mvp: true }],
-  valueProposition: '',
-});
-let state = defaultState();
-try {
-  const saved = localStorage.getItem('vibe-workshop-state');
-  if (saved) state = Object.assign(defaultState(), JSON.parse(saved));
-} catch (e) {}
-const save = () => localStorage.setItem('vibe-workshop-state', JSON.stringify(state));
-
-/* ================= 工具 ================= */
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let toastTimer;
-function toast(msg) {
-  const t = $('#toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-/* ================= 步骤渲染 ================= */
-function renderNav() {
-  $('#sidebar').innerHTML = STEPS.map((s, i) => `
-    <button class="step-nav-item ${i === state.step ? 'active' : ''} ${i < state.step ? 'done' : ''}" data-step="${i}">
-      <span class="num">${i < state.step ? '✓' : i + 1}</span>
-      <span>${s.name}</span>
-    </button>`).join('') + `
-    <div class="progress-line"><div class="bar" style="width:${Math.round(state.step / (STEPS.length - 1) * 100)}%"></div></div>
-    <div class="progress-text">${state.step + 1} / ${STEPS.length} · 自动保存中</div>`;
-  $('#mobileStepbar').innerHTML = STEPS.map((s, i) => `
-    ${i > 0 ? '<span class="ms-line"></span>' : ''}
-    <button class="ms-dot ${i === state.step ? 'active' : ''} ${i < state.step ? 'done' : ''}" data-step="${i}">${i < state.step ? '✓' : i + 1}</button>`).join('') +
-    `<span class="ms-label">${STEPS[state.step].name}</span>`;
-  document.querySelectorAll('[data-step]').forEach(b => b.onclick = () => { state.step = +b.dataset.step; save(); renderAll(); window.scrollTo({top: 0}); });
-}
-
-function fieldText(id, label, key, placeholder, hint) {
-  return `<div class="field"><label for="${id}">${label}${hint ? `<span class="hint">${hint}</span>` : ''}</label>
-    <input type="text" id="${id}" data-bind="${key}" value="${esc(state[key])}" placeholder="${esc(placeholder)}"></div>`;
-}
-function fieldArea(id, label, key, placeholder, hint, tip) {
-  return `<div class="field"><label for="${id}">${label}${hint ? `<span class="hint">${hint}</span>` : ''}</label>
-    <textarea id="${id}" data-bind="${key}" placeholder="${esc(placeholder)}">${esc(state[key])}</textarea>
-    ${tip ? `<div class="field-tip">${tip}</div>` : ''}</div>`;
-}
-
-const RENDERERS = {
-  idea() {
-    return `
-      ${fieldText('f-projectName', '项目名称', 'projectName', '例如：选择困难终结者', '哪怕先叫「我的第一个网站」')}
-      ${fieldArea('f-problem', '要解决什么问题', 'problem', '用一句话说清楚：谁，在什么场景下，遇到什么麻烦？', '', '好例：「帮室友决定今天吃什么」；反例：「做一个像淘宝的平台」')}
-      <div class="field"><label>项目类型<span class="hint">可多选</span></label>
-        <div class="chips">${TYPE_TAGS.map(t => `<button class="chip ${state.typeTags.includes(t) ? 'on' : ''}" data-tag="${t}">${t}</button>`).join('')}</div>
-      </div>
-      ${fieldArea('f-inspiration', '灵感来源', 'inspiration', '从哪想到这个点子的？可以打开右下角案例库找灵感，点「应用到我的项目」自动填到这里。')}`;
-  },
-  user() {
-    return `
-      ${fieldText('f-targetUsers', '目标人群', 'targetUsers', '例如：大三准备找实习的同学', '具体到一类真实存在的人')}
-      ${fieldArea('f-persona', '典型用户画像', 'persona', '描述一个具体的人：TA 是谁、每天怎么过、什么情绪下会打开你的产品？')}
-      ${fieldArea('f-scenario', '使用场景', 'scenario', '在脑子里放电影：什么时间、什么地点、什么触发点，TA 会打开这个网站？')}
-      ${fieldArea('f-painPoints', '核心痛点', 'painPoints', 'TA 现在是怎么解决这个问题的？为什么现有方式不够好？', '', '痛点越具体，后面的功能越好定')}`;
-  },
-  research() {
-    return `
-      <div class="field"><label>计划使用的调研方法<span class="hint">点击卡片选择并查看实施指南，可多选</span></label>
-        <div class="method-grid">
-          ${METHODS.map(m => `
-            <button class="method-card ${state.researchMethods.includes(m.id) ? 'on' : ''}" data-method="${m.id}">
-              <span class="m-check">✓</span>
-              <div class="m-name">${m.name}</div>
-              <div class="m-desc">${m.desc}</div>
-            </button>`).join('')}
-        </div>
-      </div>
-      <div id="methodDetailSlot"></div>
-      ${fieldArea('f-competitors', '竞品分析', 'competitors', '市面上有没有类似产品？它们做得好的和不好的各是什么？你的不同在哪？')}
-      ${fieldText('f-marketSize', '市场规模估算', 'marketSize', '例如：全国约 1000 万大学生，其中 30% 有找实习焦虑', '粗略估算即可')}
-      ${fieldArea('f-researchNotes', '调研笔记', 'researchNotes', '访谈原声、问卷结论、社群吐槽……把最有说服力的发现记在这里。')}`;
-  },
-  feature() {
-    return `
-      <div class="field"><label>功能清单<span class="hint">把想要的功能都列出来，再标记 MVP（第一版必须做的，≤3 个）</span></label>
-        <div id="featureList">
-          ${state.features.map((f, i) => `
-            <div class="feature-item ${f.mvp ? 'mvp' : ''}">
-              <div class="feature-row">
-                <div class="f-inputs">
-                  <input type="text" data-fname="${i}" value="${esc(f.name)}" placeholder="功能名称，例如：随机抽一个外卖选项">
-                  <input type="text" data-fdesc="${i}" value="${esc(f.desc)}" placeholder="一句话说明这个功能怎么用">
-                </div>
-                <button class="f-mvp-btn" data-fmvp="${i}">${f.mvp ? '★ MVP' : '☆ 设为 MVP'}</button>
-                <button class="f-del" data-fdel="${i}" title="删除">×</button>
-              </div>
-            </div>`).join('')}
-        </div>
-        <button class="add-feature-btn" id="addFeature">＋ 添加功能</button>
-        <div class="quick-chips">
-          <div class="qc-label">快捷添加常见功能：</div>
-          <div class="chips">${QUICK_FEATURES.map(q => `<button class="chip" data-quick="${q}">${q}</button>`).join('')}</div>
-        </div>
-      </div>
-      ${fieldArea('f-valueProp', '价值主张', 'valueProposition', '帮助 [目标用户] 解决 [核心痛点]，通过 [核心功能]', '点击右侧按钮可自动生成', '公式：帮助 [谁] 解决 [什么痛]，通过 [什么功能]')}
-      <button class="btn btn-ghost" id="genValueProp" style="margin-top:-10px">✨ 根据已填内容生成</button>`;
-  },
-  score() {
-    const dims = computeScores();
-    const total = Math.round(dims.reduce((a, d) => a + d.score, 0) / dims.length);
-    const grade = total >= 80 ? '优秀' : total >= 60 ? '中等' : '待加强';
-    const gradeTip = total >= 80 ? '可以直接开始 Vibe Coding 了' : total >= 60 ? '再打磨一下差异化或价值主张' : '建议回到前几步补充内容，或去案例库找灵感';
-    return `
-      <div class="score-hero">
-        <div class="big">${total}<small> / 100</small></div>
-        <div class="grade">综合评分<strong>${grade}</strong></div>
-        <div class="suggest">${gradeTip}<br>分数根据你已填写的内容自动计算</div>
-      </div>
-      ${dims.map(d => `
-        <div class="dim-item">
-          <div class="dim-head"><span class="d-name">${d.name}</span><span class="d-score">${d.score}</span></div>
-          <div class="dim-bar"><div class="fill" style="width:${d.score}%"></div></div>
-          <div class="dim-sugg ${d.score < 70 ? 'warn' : ''}">${d.score < 70 ? '💡 ' + d.sugg : '✓ 这一项做得不错'}</div>
-        </div>`).join('')}
-      <div class="field-tip" style="margin-top:14px">评分参考：80-100 优秀可直接开工；60-79 中等需打磨；60 以下建议换方向或补内容。</div>`;
-  },
-  output() {
-    const md = buildMarkdown();
-    return `
-      <div class="output-preview">${esc(md)}</div>
-      <div class="output-actions">
-        <button class="btn btn-primary" id="copyMd">📋 复制 Markdown</button>
-        <button class="btn btn-ghost" id="downloadMd">⬇️ 下载 .md 文件</button>
-        <button class="btn btn-ghost" id="resetAll">🗑 清空重填</button>
-      </div>
-      <div class="field-tip" style="margin-top:14px">把这份文档直接粘贴给 Bolt.new、Lovable、Cursor 等 AI 编程工具，就是你的初始 prompt。</div>`;
-  },
-};
-
-function renderStep() {
-  const s = STEPS[state.step];
-  $('#stepPanel').innerHTML = `
-    <div class="step-kicker">${s.kicker}</div>
-    <h2 class="step-title">${s.name}</h2>
-    <p class="step-desc">${s.desc}</p>
-    ${RENDERERS[s.id]()}`;
-  $('#prevBtn').style.visibility = state.step === 0 ? 'hidden' : 'visible';
-  $('#nextBtn').textContent = state.step === STEPS.length - 1 ? '完成 ✓' : '下一步 →';
-  bindStepEvents();
-}
-
-function bindStepEvents() {
-  document.querySelectorAll('[data-bind]').forEach(el => {
-    el.oninput = () => { state[el.dataset.bind] = el.value; save(); };
-  });
-  document.querySelectorAll('[data-tag]').forEach(el => {
-    el.onclick = () => {
-      const t = el.dataset.tag;
-      state.typeTags = state.typeTags.includes(t) ? state.typeTags.filter(x => x !== t) : [...state.typeTags, t];
-      save(); renderStep();
-    };
-  });
-  document.querySelectorAll('[data-method]').forEach(el => {
-    el.onclick = () => {
-      const id = el.dataset.method;
-      if (!state.researchMethods.includes(id)) {
-        state.researchMethods = [...state.researchMethods, id];
-        save(); renderStep();
-      }
-      showMethodDetail(id);
-    };
-  });
-  document.querySelectorAll('[data-fname]').forEach(el => { el.oninput = () => { state.features[+el.dataset.fname].name = el.value; save(); }; });
-  document.querySelectorAll('[data-fdesc]').forEach(el => { el.oninput = () => { state.features[+el.dataset.fdesc].desc = el.value; save(); }; });
-  document.querySelectorAll('[data-fmvp]').forEach(el => {
-    el.onclick = () => { const f = state.features[+el.dataset.fmvp]; f.mvp = !f.mvp; save(); renderStep(); };
-  });
-  document.querySelectorAll('[data-fdel]').forEach(el => {
-    el.onclick = () => {
-      if (state.features.length <= 1) { toast('至少保留一个功能'); return; }
-      state.features.splice(+el.dataset.fdel, 1); save(); renderStep();
-    };
-  });
-  const addBtn = $('#addFeature');
-  if (addBtn) addBtn.onclick = () => { state.features.push({ name: '', desc: '', mvp: false }); save(); renderStep(); };
-  document.querySelectorAll('[data-quick]').forEach(el => {
-    el.onclick = () => { state.features.push({ name: el.dataset.quick, desc: '', mvp: false }); save(); renderStep(); };
-  });
-  const gvp = $('#genValueProp');
-  if (gvp) gvp.onclick = () => {
-    const u = state.targetUsers || '[目标用户]';
-    const p = (state.painPoints || state.problem || '[核心痛点]').split(/[。；;\n]/)[0] || '[核心痛点]';
-    const mvp = state.features.find(f => f.mvp && f.name);
-    const f = mvp ? mvp.name : '[核心功能]';
-    state.valueProposition = `帮助${u}解决「${p}」，通过「${f}」。`;
-    save(); renderStep(); toast('已生成，可继续修改');
-  };
-  const cp = $('#copyMd');
-  if (cp) cp.onclick = async () => {
-    try { await navigator.clipboard.writeText(buildMarkdown()); toast('已复制到剪贴板'); }
-    catch (e) {
-      const ta = document.createElement('textarea');
-      ta.value = buildMarkdown(); document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); ta.remove(); toast('已复制到剪贴板');
-    }
-  };
-  const dl = $('#downloadMd');
-  if (dl) dl.onclick = () => {
-    const name = (state.projectName || 'vibe-coding-idea').replace(/[\\/:*?"<>|]/g, '-');
-    const blob = new Blob([buildMarkdown()], { type: 'text/markdown;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${name}-创意方案.md`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast('已开始下载');
-  };
-  const rs = $('#resetAll');
-  if (rs) rs.onclick = () => {
-    if (confirm('确定清空所有已填内容并重填吗？')) { state = defaultState(); save(); renderAll(); toast('已清空'); }
-  };
-}
-
-function showMethodDetail(id) {
-  const m = METHODS.find(x => x.id === id);
-  if (!m) return;
-  const slot = $('#methodDetailSlot');
-  const isOn = state.researchMethods.includes(id);
-  slot.innerHTML = `
-    <div class="method-detail">
-      <h4>${m.name} · 实施指南</h4>
-      <ul style="margin-bottom:10px">${m.steps.map(s => `<li>${s}</li>`).join('')}</ul>
-      <div class="cols">
-        <div class="pros">✓ 优势：${m.pros}</div>
-        <div class="cons">⚠ 局限：${m.cons}</div>
-      </div>
-      ${isOn ? `<button class="case-back" id="unselectMethod" style="color:#B45309">取消选择该方法</button>` : ''}
-    </div>`;
-  const un = $('#unselectMethod');
-  if (un) un.onclick = () => {
-    state.researchMethods = state.researchMethods.filter(x => x !== id);
-    save(); renderStep();
-  };
-}
-
-/* ================= 评分 ================= */
-function lenScore(text, full = 60) {
-  const n = (text || '').trim().length;
-  if (n === 0) return 0;
-  if (n < 15) return 45;
-  if (n < full) return 65 + Math.round((n - 15) / (full - 15) * 20);
-  return 90;
-}
-function computeScores() {
-  const p1 = Math.round((lenScore(state.problem) + lenScore(state.painPoints)) / 2);
-  const p2 = Math.round((lenScore(state.targetUsers, 20) + lenScore(state.marketSize, 25) + lenScore(state.scenario)) / 3);
-  const p3 = Math.round((lenScore(state.competitors) * 0.6 + lenScore(state.inspiration) * 0.4));
-  const mvpCount = state.features.filter(f => f.mvp && f.name.trim()).length;
-  const totalCount = state.features.filter(f => f.name.trim()).length;
-  let p4 = 0;
-  if (totalCount > 0) {
-    p4 = mvpCount === 0 ? 50 : mvpCount <= 3 ? (totalCount <= 5 ? 88 : 75) : 62;
-  }
-  const p5 = Math.round((lenScore(state.valueProposition) * 0.6 + Math.min(state.researchMethods.length, 3) / 3 * 100 * 0.4));
-  return [
-    { name: '需求强度', score: p1, sugg: '回到「灵感起源」和「用户画像」，把问题和痛点写得更具体——越具体越说明需求真实。' },
-    { name: '市场空间', score: p2, sugg: '补充目标人群规模估算和使用场景描述，哪怕粗略估算也比空白好。' },
-    { name: '差异化程度', score: p3, sugg: '在「商业调研」里写下 2-3 个竞品，并说清楚你的不同在哪。' },
-    { name: '实现可行性', score: p4, sugg: 'MVP 功能控制在 1-3 个；功能总清单超过 5 个时，砍掉第一版用不到的。' },
-    { name: '商业潜力', score: p5, sugg: '生成或手写一句话价值主张，并在调研方法里至少勾选 2 种验证手段。' },
-  ];
-}
-
-/* ================= Markdown 输出 ================= */
-function buildMarkdown() {
-  const dims = computeScores();
-  const total = Math.round(dims.reduce((a, d) => a + d.score, 0) / dims.length);
-  const grade = total >= 80 ? '优秀' : total >= 60 ? '中等' : '待加强';
-  const v = (s, ph = '（未填写）') => (s || '').trim() || ph;
-  const methodNames = state.researchMethods.map(id => (METHODS.find(m => m.id === id) || {}).name).filter(Boolean);
-  const featureLines = state.features.filter(f => f.name.trim()).map((f, i) =>
-    `${i + 1}. ${f.mvp ? '⭐ [MVP] ' : ''}${f.name.trim()}${f.desc.trim() ? ' — ' + f.desc.trim() : ''}`);
-  const mvpNames = state.features.filter(f => f.mvp && f.name.trim()).map(f => f.name.trim());
-  return `# ${v(state.projectName, '未命名项目')} — Vibe Coding 创意方案
-
-> 由得欧Vibe Coding 创意梳理工作台生成
-
-## 一、灵感起源
-
-- **项目名称**：${v(state.projectName)}
-- **要解决的问题**：${v(state.problem)}
-- **项目类型**：${state.typeTags.length ? state.typeTags.join(' / ') : '（未选择）'}
-- **灵感来源**：${v(state.inspiration)}
-
-## 二、用户画像
-
-- **目标人群**：${v(state.targetUsers)}
-- **典型用户**：${v(state.persona)}
-- **使用场景**：${v(state.scenario)}
-- **核心痛点**：${v(state.painPoints)}
-
-## 三、商业调研
-
-- **计划使用的调研方法**：${methodNames.length ? methodNames.join('、') : '（未选择）'}
-- **竞品分析**：${v(state.competitors)}
-- **市场规模估算**：${v(state.marketSize)}
-- **调研笔记**：${v(state.researchNotes)}
-
-## 四、核心功能
-
-**价值主张**：${v(state.valueProposition)}
-
-**功能清单**：
-${featureLines.length ? featureLines.join('\n') : '（未填写）'}
-
-## 五、方案评分
-
-- 综合评分：**${total} / 100（${grade}）**
-${dims.map(d => `- ${d.name}：${d.score}`).join('\n')}
-
-## 六、给 AI 编程工具的初始 Prompt
-
-请帮我构建一个响应式 Web 应用「${v(state.projectName, '未命名项目')}」。
-
-- 目标用户：${v(state.targetUsers, '待定')}
-- 解决的问题：${v(state.problem, '待定')}
-- 核心痛点：${v(state.painPoints, '待定')}
-- 第一版 MVP 必须包含的功能：${mvpNames.length ? mvpNames.join('；') : '待定'}
-- 使用场景：${v(state.scenario, '待定')}
-
-要求：界面简洁现代、移动端可用、无需后端即可运行的纯前端实现优先。先给出技术方案再开始编码。`;
-}
-
-/* ================= 案例库 ================= */
-let caseFilter = '全部';
-let caseDetail = null;
-const CASE_CATS = ['全部', 'AI 应用', '效率工具', '生活方式', '教育学习', '社区社交'];
-
-function renderCaseDrawer() {
-  const d = $('#caseDrawer');
-  if (caseDetail) {
-    const c = caseDetail;
-    d.innerHTML = `
-      <div class="case-drawer-head">
-        <div><button class="case-back" id="caseBack">← 返回列表</button></div>
-        <button class="case-close" id="caseClose" aria-label="关闭">×</button>
-      </div>
-      <div class="case-detail">
-        <div class="cd-hero"><img src="${c.img}" alt="${esc(c.name)}" loading="lazy"></div>
-        <div class="cd-body">
-          <span class="cd-cat">${c.cat}</span>
-          <h2>${esc(c.name)}</h2>
-          <div class="cd-sub">${esc(c.title)}</div>
-          <div class="cd-meta"><span>🚀 MVP 周期：<b>${c.mvp}</b></span><span>👥 <b>${c.users}</b></span></div>
-          <div class="cd-block"><div class="cd-label">产品介绍</div><p>${esc(c.desc)}</p></div>
-          <div class="cd-block"><div class="cd-label">核心洞察</div><p>${esc(c.insight)}</p></div>
-          <div class="cd-block"><div class="cd-label">亮点特色</div><p>${esc(c.highlight)}</p></div>
-          <div class="cd-block"><div class="cd-label">商业模式</div><p>${esc(c.business)}</p></div>
-          <div class="cd-block takeaway"><div class="cd-label">💡 带给你的启发</div><p>${esc(c.takeaway)}</p></div>
-          <button class="btn btn-primary cd-apply" id="applyCase">💡 应用到我的项目</button>
-        </div>
-      </div>`;
-    $('#caseBack').onclick = () => { caseDetail = null; renderCaseDrawer(); };
-    $('#caseClose').onclick = closeCaseDrawer;
-    $('#applyCase').onclick = () => {
-      state.inspiration = `参考 ${c.name}：${c.takeaway}`;
-      if (!state.typeTags.includes(c.cat) && TYPE_TAGS.includes(c.cat)) state.typeTags = [...state.typeTags, c.cat];
-      save(); closeCaseDrawer();
-      if (state.step !== 0) { state.step = 0; save(); }
-      renderAll();
-      toast(`已把「${c.name}」的启发填入灵感来源`);
-    };
-    return;
-  }
-  const list = CASES.filter(c => caseFilter === '全部' || c.cat === caseFilter);
-  d.innerHTML = `
-    <div class="case-drawer-head">
-      <div><h3>优秀 Vibe Coding 案例库</h3><p>${CASES.length} 个成功项目的创意拆解</p></div>
-      <button class="case-close" id="caseClose" aria-label="关闭">×</button>
-    </div>
-    <div class="case-filter-row">
-      ${CASE_CATS.map(t => `<button class="chip ${caseFilter === t ? 'on' : ''}" data-cat="${t}">${t}</button>`).join('')}
-    </div>
-    <div class="case-list">
-      ${list.map(c => `
-        <div class="case-card" data-case="${c.id}">
-          <div class="cc-img"><img src="${c.img}" alt="${esc(c.name)}" loading="lazy"><span class="cc-cat">${c.cat}</span></div>
-          <div class="cc-body">
-            <div class="cc-name">${esc(c.name)} — ${esc(c.title)}</div>
-            <div class="cc-desc">${esc(c.desc)}</div>
-            <div class="cc-meta"><span>🚀 MVP 周期：<b>${c.mvp}</b></span><span>👥 <b>${c.users}</b></span></div>
-          </div>
-        </div>`).join('') || '<p style="color:var(--text-light);text-align:center;padding:40px 0">该分类暂无案例</p>'}
-    </div>`;
-  $('#caseClose').onclick = closeCaseDrawer;
-  d.querySelectorAll('[data-cat]').forEach(el => { el.onclick = () => { caseFilter = el.dataset.cat; renderCaseDrawer(); }; });
-  d.querySelectorAll('[data-case]').forEach(el => {
-    el.onclick = () => { caseDetail = CASES.find(c => c.id === el.dataset.case); renderCaseDrawer(); };
-  });
-}
-
-function openCaseDrawer() {
-  caseDetail = null;
-  renderCaseDrawer();
-  $('#caseOverlay').classList.add('open');
-  $('#caseDrawer').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeCaseDrawer() {
-  caseDetail = null;
-  $('#caseOverlay').classList.remove('open');
-  $('#caseDrawer').classList.remove('open');
-  document.body.style.overflow = '';
-}
-$('#caseFab').onclick = openCaseDrawer;
-$('#caseOverlay').onclick = closeCaseDrawer;
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCaseDrawer(); });
-
-/* ================= 步骤切换 ================= */
-$('#prevBtn').onclick = () => { if (state.step > 0) { state.step--; save(); renderAll(); window.scrollTo({top: 0}); } };
-$('#nextBtn').onclick = () => {
-  if (state.step < STEPS.length - 1) { state.step++; save(); renderAll(); window.scrollTo({top: 0}); }
-  else toast('方案已完成，可复制或下载文档');
-};
-
-function renderAll() { renderNav(); renderStep(); }
-renderAll();
-</script>
+  <script type="text/babel" src="components/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="components/steps.jsx"></script>
+  <script type="text/babel" src="components/extra.jsx"></script>
+  <script type="text/babel" src="components/App.jsx"></script>
 </body>
 </html>
